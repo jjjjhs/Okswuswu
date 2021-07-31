@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class mayonnaise : MonoBehaviour
 {
+    //마요네즈 속도
     public float mayoSpeed = 5;
+   
+    //마요네즈 체력
     public int HpMayo = 5;
 
-    public int CountDiedMayo = 0;
-
     Vector3 dir;
+
+    //중력변수
+    public float gravity = -20.0f;
+
+    //수직속도변수
+    float yVelocity = 0;
 
     void Start()
     {
@@ -33,23 +40,26 @@ public class mayonnaise : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.position += dir * mayoSpeed * Time.deltaTime;
+
+        //캐릭터에 중력 작용
+        yVelocity += gravity * Time.deltaTime;
+        dir.y = yVelocity;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.name == bullet)
+        if (collision.gameObject.name == "bullet")
         {
             HpMayo--;
         }
         if (HpMayo == 0)
         {
             Destroy(gameObject);
-            CountDiedMayo++;
+            mayonnaiseFactory.CountDiedMayo++;
         }
     }
 }

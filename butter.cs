@@ -5,7 +5,13 @@ using UnityEngine;
 public class cheese : MonoBehaviour
 {
     public float butterSpeed = 3;
-    public int HpButt = 3;
+    public  int HpButt = 3;
+
+    //중력변수
+    public float gravity = -20.0f;
+
+    //수직속도변수
+    float yVelocity = 0;
 
     Vector3 dir;
 
@@ -31,16 +37,19 @@ public class cheese : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.position += dir * butterSpeed * Time.deltaTime;
+
+        //캐릭터에 중력 작용
+        yVelocity += gravity * Time.deltaTime;
+        dir.y = yVelocity;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.name == bullet)
+        if (collision.gameObject.name == "bullet")
         {
             HpButt--;
         }
@@ -48,6 +57,8 @@ public class cheese : MonoBehaviour
         if (HpButt == 0)
         {
             Destroy(gameObject);
+
+            mayonnaiseFactory.CountDiedButt++;
         }
     }
 }

@@ -9,6 +9,12 @@ public class butter : MonoBehaviour
 
     Vector3 dir;
 
+    //중력변수
+    public float gravity = -20.0f;
+
+    //수직속도변수
+    float yVelocity = 0;
+
     void Start()
     {
         int randValue = Random.Range(0, 10);
@@ -31,21 +37,25 @@ public class butter : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.position += dir * cheeseSpeed * Time.deltaTime;
+
+        //캐릭터에 중력 작용
+        yVelocity += gravity * Time.deltaTime;
+        dir.y = yVelocity;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == bullet)
+        if (collision.gameObject.name == "bullet")
         {
             HpChee--;
         }
         if(HpChee==0)
         {
             Destroy(gameObject);
+            mayonnaiseFactory.CountDiedChee++;
         }
     }
 }

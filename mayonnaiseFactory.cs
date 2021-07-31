@@ -7,13 +7,15 @@ public class mayonnaiseFactory : MonoBehaviour
     public float createTime = 2;
     float currentTime;
 
+    //총알
     public GameObject mayoFactory;
     public GameObject butterFactory;
     public GameObject cheeseFactory;
 
-    int CountDiedMayo = 0;
-    int CountDiedButt = 0;
-    int CountDiedChee = 0;
+    //스테이지 넘어가기 위해 죽은 적의 수 세기
+    public static int CountDiedMayo = 0;
+    public static  int CountDiedButt = 0;
+    public static int CountDiedChee = 0;
 
     public int stage1clear = 10;
     public int stage2clear = 30;
@@ -32,41 +34,11 @@ public class mayonnaiseFactory : MonoBehaviour
         createTime = Random.Range(minTime, maxTime);
     }
 
-
-
     void Update()
     {
-        if(GameObject.Find("mayonnaise").GetComponent<mayonnaise>().HpMayo)
-        {
-            CountDiedMayo++;
-        }
-        if (GameObject.Find("cheese").GetComponent<cheese>().HpChee)
-        {
-            CountDiedChee++;
-        }
-        if (GameObject.Find("butter").GetComponent<butter>().HpButt)
-        {
-            CountDiedButt++;
-        }
-
-
         currentTime += Time.deltaTime;
 
-        if (CountDiedButt <= 10)
-        {
-            if (currentTime > createTime)
-            {
-                GameObject enemy = Instantiate(mayoFactory);
-
-                enemy.transform.position = this.gameObject.transform.position;
-
-                currentTime = 0;
-
-                createTime = Random.Range(minTime, maxTime);
-            }
-        }
-
-        if (CountDiedButt > 10 && CountDiedMayo <= 30)
+        if (CountDiedButt <= stage1clear)
         {
             if (currentTime > createTime)
             {
@@ -80,7 +52,21 @@ public class mayonnaiseFactory : MonoBehaviour
             }
         }
 
-        if (CountDiedButt > 10 && CountDiedMayo > 30 && CountDiedChee <= 70)
+        if (CountDiedButt > stage1clear && CountDiedMayo <= stage2clear)
+        {
+            if (currentTime > createTime)
+            {
+                GameObject enemy = Instantiate(mayoFactory);
+
+                enemy.transform.position = this.gameObject.transform.position;
+
+                currentTime = 0;
+
+                createTime = Random.Range(minTime, maxTime);
+            }
+        }
+
+        if (CountDiedButt > stage1clear && CountDiedMayo > stage2clear && CountDiedChee <= stage3clear)
         {
             if (currentTime > createTime)
             {
@@ -93,9 +79,5 @@ public class mayonnaiseFactory : MonoBehaviour
                 createTime = Random.Range(minTime, maxTime);
             }
         }
-
-
     }
-
-  
 }
