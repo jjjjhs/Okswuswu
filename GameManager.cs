@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -9,7 +11,18 @@ public class GameManager : MonoBehaviour
     public static GameManager gm;
 
 
-    
+    //게임 상태 상수
+    public enum GameState
+    {
+        Prologue,
+        Run,
+        GameOver,
+        Pause
+    }
+
+
+    //게임 상태 변수
+    public GameState gState;
         
     //배드엔딩 스프라이트 변수
     public GameObject badending;
@@ -26,7 +39,8 @@ public class GameManager : MonoBehaviour
     //text변수
     public Text endingText;
 
-
+    //옵션 메뉴 유아이 오브젝트
+    public GameObject option;
 
 
     //플레이어 게임 오브젝트 변수
@@ -94,6 +108,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Badending()
     {
+        gState = GameState.GameOver;
         badending.SetActive(true);
         yield return new WaitForSeconds(2.0f);
     }
@@ -101,14 +116,65 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Happyending()
     {
+        gState = GameState.GameOver;
         happyending.SetActive(true);
         yield return new WaitForSeconds(2.0f);
     }
 
     IEnumerator Normalending()
     {
+        gState = GameState.GameOver;
         normalending.SetActive(true);
         yield return new WaitForSeconds(2.0f);
     }
+
+
+    public void OpenOption()
+    {
+        gState = GameState.Pause;
+
+        //시간 멈춤(게임 움직임 멈춤)
+        Time.timeScale = 0;
+
+        //옵션 메뉴창 활성화
+        option.SetActive(true);
+
+    }
+
+
+    //옵션 끄기
+    public void CloseOption()
+    {
+        //시간을 1배로 되돌림
+        Time.timeScale = 1;
+
+        //옵션메뉴 창을 비활성화
+        option.SetActive(false);
+
+        gState = GameState.Run;
+    }
+
+
+
+    //현재 씬 다시 로드
+    public void GameRestart()
+    {
+        //시간을 1배로 되돌림
+        Time.timeScale = 1;
+
+        //현재 씬 다시 로드
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    //게임 종료
+    public void GameQuit()
+    {
+        //어플리케이션 종료
+        Application.Quit();
+    }
+
+
+
+
 
 }
