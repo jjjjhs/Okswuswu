@@ -38,10 +38,11 @@ public class mayonnaiseFactory : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        if (CountDiedButt <= stage1clear)
+        if (currentTime > createTime)
         {
-            if (currentTime > createTime)
+            if (CountDiedButt <= stage1clear)
             {
+
                 GameObject enemy = Instantiate(butterFactory);
 
                 enemy.transform.position = this.gameObject.transform.position;
@@ -50,12 +51,10 @@ public class mayonnaiseFactory : MonoBehaviour
 
                 createTime = Random.Range(minTime, maxTime);
             }
-        }
 
-        if (CountDiedButt > stage1clear && CountDiedMayo <= stage2clear)
-        {
-            if (currentTime > createTime)
+            else if (CountDiedButt > stage1clear && CountDiedMayo <= stage2clear)
             {
+
                 GameObject enemy = Instantiate(mayoFactory);
 
                 enemy.transform.position = this.gameObject.transform.position;
@@ -63,13 +62,12 @@ public class mayonnaiseFactory : MonoBehaviour
                 currentTime = 0;
 
                 createTime = Random.Range(minTime, maxTime);
-            }
-        }
 
-        if (CountDiedButt > stage1clear && CountDiedMayo > stage2clear && CountDiedChee <= stage3clear)
-        {
-            if (currentTime > createTime)
+            }
+
+            else if (CountDiedButt > stage1clear && CountDiedMayo > stage2clear && CountDiedChee <= stage3clear)
             {
+
                 GameObject enemy = Instantiate(cheeseFactory);
 
                 enemy.transform.position = this.gameObject.transform.position;
@@ -77,6 +75,7 @@ public class mayonnaiseFactory : MonoBehaviour
                 currentTime = 0;
 
                 createTime = Random.Range(minTime, maxTime);
+
             }
         }
     }
