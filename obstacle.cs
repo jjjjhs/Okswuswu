@@ -15,7 +15,7 @@ public class obstacle : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.right * Time.deltaTime * speed);
-        if (transform.position.x < -12)
+        if (transform.position.x < -30)
         {
             Destroy(gameObject);
         }
@@ -26,7 +26,7 @@ public class obstacle : MonoBehaviour
         {
             Obstacle.SetActive(false);
         }
-        else if (other.gameObject.name.Contains("enemy"))
+        else if (other.gameObject.name.Contains("butter") || other.gameObject.name.Contains("mayonnaise") || other.gameObject.name.Contains("cheese"))
         {
             Obstacle.SetActive(false);
         }

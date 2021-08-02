@@ -24,12 +24,4 @@ public class destoryZone : MonoBehaviour
 
     }
 }
-    /* private void OnCollisionEnter(Collision other)
-     {
-         if (other.gameObject.name.Contains("bullet") || other.gameObject.name.Contains("obstacle"))
-         {
-             hp--;
-         }
-     }
-    */
 

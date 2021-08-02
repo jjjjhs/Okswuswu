@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //ì‹±ê¸€í„´-ì¸ìŠ¤í„´ìŠ¤ë¥¼ í•˜ë‚˜ë§Œ ìƒì„±í•˜ë„ë¡ í•¨(ë²„ê·¸ ì¤„ì„)
+    //½Ì±ÛÅÏ-ÀÎ½ºÅÏ½º¸¦ ÇÏ³ª¸¸ »ı¼ºÇÏµµ·Ï ÇÔ(¹ö±× ÁÙÀÓ)
     public static GameManager gm;
 
 
-    //ê²Œì„ ìƒíƒœ ìƒìˆ˜
+    //°ÔÀÓ »óÅÂ »ó¼ö
     public enum GameState
     {
         Prologue,
@@ -21,10 +21,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //ê²Œì„ ìƒíƒœ ë³€ìˆ˜
+    //°ÔÀÓ »óÅÂ º¯¼ö
     public GameState gState;
-        
-    //ë°°ë“œì—”ë”© ìŠ¤í”„ë¼ì´íŠ¸ ë³€ìˆ˜
+
+    //¹èµå¿£µù ½ºÇÁ¶óÀÌÆ® º¯¼ö
     public GameObject badending;
     public GameObject happyending;
     public GameObject normalending;
@@ -32,22 +32,22 @@ public class GameManager : MonoBehaviour
 
 
     //ui
-    //ì´ë¯¸ì§€ ë³€ìˆ˜
+    //ÀÌ¹ÌÁö º¯¼ö
     public Image endingImage;
 
 
-    //textë³€ìˆ˜
+    //textº¯¼ö
     public Text endingText;
 
-    //ì˜µì…˜ ë©”ë‰´ ìœ ì•„ì´ ì˜¤ë¸Œì íŠ¸
+    //¿É¼Ç ¸Ş´º À¯¾ÆÀÌ ¿ÀºêÁ§Æ®
     public GameObject option;
 
 
-    //í”Œë ˆì´ì–´ ê²Œì„ ì˜¤ë¸Œì íŠ¸ ë³€ìˆ˜
+    //ÇÃ·¹ÀÌ¾î °ÔÀÓ ¿ÀºêÁ§Æ® º¯¼ö
     GameObject player;
 
-    //í”Œë ˆì´ì–´ ë¬´ë¸Œ ì»´í¬ë„ŒíŠ¸ ë³€ìˆ˜
-    playerMove playerM;
+    //ÇÃ·¹ÀÌ¾î ¹«ºê ÄÄÆ÷³ÍÆ® º¯¼ö
+    PlayerMove playerM;
 
     private void Awake()
     {
@@ -59,15 +59,15 @@ public class GameManager : MonoBehaviour
 
 
 
-   
+
     // Start is called before the first frame update
     void Start()
     {
-        //ì´ˆê¸° ê²Œì„ ìƒíƒœ
-        //prologue ë³´ì—¬ì£¼ë©° ê²Œì„ ì‹œì‘
+        //ÃÊ±â °ÔÀÓ »óÅÂ
+        //prologue º¸¿©ÁÖ¸ç °ÔÀÓ ½ÃÀÛ
 
-        //í”Œë ˆì´ì–´ ê²Œì„ ì˜¤ë¸Œì íŠ¸ ê²€ìƒ‰
-        player = GameObject.Find("Capsule"); //'í”Œë ˆì´ì–´' ê²€ìƒ‰ -> Capsuleì„ ê²Œì„ì˜ í”Œë ˆì´ì–´(ì˜¥ìˆ˜ìˆ˜)ë¡œ ë³€ê²½í•˜ë©´ ë¨.
+        //ÇÃ·¹ÀÌ¾î °ÔÀÓ ¿ÀºêÁ§Æ® °Ë»ö
+        player = GameObject.Find("Capsule"); //'ÇÃ·¹ÀÌ¾î' °Ë»ö -> CapsuleÀ» °ÔÀÓÀÇ ÇÃ·¹ÀÌ¾î(¿Á¼ö¼ö)·Î º¯°æÇÏ¸é µÊ.
     }
 
 
@@ -75,29 +75,29 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //badending
-        //1. ë§Œì•½ í”Œë ˆì´ì–´ì˜ hpê°€ 0ì´í•˜ë¼ë©´ ë°°ë“œì—”ë”©
-        if(playerM.hp<=0)
+        //1. ¸¸¾à ÇÃ·¹ÀÌ¾îÀÇ hp°¡ 0ÀÌÇÏ¶ó¸é ¹èµå¿£µù
+        if (PlayerMove.hp <= 0)
         {
-            //ê²Œì„ì˜¤ë²„ ë¬¸êµ¬ ì¶œë ¥
+            //°ÔÀÓ¿À¹ö ¹®±¸ Ãâ·Â
             endingText.text = "Game Over..";
             Badending();
         }
 
-        //2. ë§Œì•½ í”Œë ˆì´ì–´ì˜ ì´ì•Œ ê°œìˆ˜ê°€ ë‹¤ ë–¨ì–´ì¡Œì„ ì‹œ ë°°ë“œì—”ë”©
+        //2. ¸¸¾à ÇÃ·¹ÀÌ¾îÀÇ ÃÑ¾Ë °³¼ö°¡ ´Ù ¶³¾îÁ³À» ½Ã ¹èµå¿£µù
 
 
 
 
         //happyending
-        //ë§Œì•½ í”Œë ˆì´ì–´ê°€ í• ë‹¹ëŸ‰ë§Œí¼ ì ì„ ì²˜ì§€ í–ˆì„ ì‹œ í•´í”¼ì—”ë”©
+        //¸¸¾à ÇÃ·¹ÀÌ¾î°¡ ÇÒ´ç·®¸¸Å­ ÀûÀ» Ã³Áö ÇßÀ» ½Ã ÇØÇÇ¿£µù
 
 
 
         //normalending
-        //ì²´ë ¥ì´ ì¼ì •ëŸ‰ ì´í•˜ì¸ ì²´ë¡œ í†µê³¼ ì‹œ ë…¸ë©€ì—”ë”©
-        if(playerM.hp>0&&playerM.hp<5) //5ëŠ” í”Œì—ì´ì–´ ì²´ë ¥ì˜ ì¼ì • ëŸ‰.-->ì¡°ì ˆ ê°€ëŠ¥
+        //Ã¼·ÂÀÌ ÀÏÁ¤·® ÀÌÇÏÀÎ Ã¼·Î Åë°ú ½Ã ³ë¸Ö¿£µù
+        if (PlayerMove.hp > 0 && PlayerMove.hp < 5) //5´Â ÇÃ¿¡ÀÌ¾î Ã¼·ÂÀÇ ÀÏÁ¤ ·®.-->Á¶Àı °¡´É
         {
-            //try again ë¬¸êµ¬ ì¶œë ¥
+            //try again ¹®±¸ Ãâ·Â
             endingText.text = "Try Again!";
             Normalending();
         }
@@ -133,22 +133,22 @@ public class GameManager : MonoBehaviour
     {
         gState = GameState.Pause;
 
-        //ì‹œê°„ ë©ˆì¶¤(ê²Œì„ ì›€ì§ì„ ë©ˆì¶¤)
+        //½Ã°£ ¸ØÃã(°ÔÀÓ ¿òÁ÷ÀÓ ¸ØÃã)
         Time.timeScale = 0;
 
-        //ì˜µì…˜ ë©”ë‰´ì°½ í™œì„±í™”
+        //¿É¼Ç ¸Ş´ºÃ¢ È°¼ºÈ­
         option.SetActive(true);
 
     }
 
 
-    //ì˜µì…˜ ë„ê¸°
+    //¿É¼Ç ²ô±â
     public void CloseOption()
     {
-        //ì‹œê°„ì„ 1ë°°ë¡œ ë˜ëŒë¦¼
+        //½Ã°£À» 1¹è·Î µÇµ¹¸²
         Time.timeScale = 1;
 
-        //ì˜µì…˜ë©”ë‰´ ì°½ì„ ë¹„í™œì„±í™”
+        //¿É¼Ç¸Ş´º Ã¢À» ºñÈ°¼ºÈ­
         option.SetActive(false);
 
         gState = GameState.Run;
@@ -156,20 +156,20 @@ public class GameManager : MonoBehaviour
 
 
 
-    //í˜„ì¬ ì”¬ ë‹¤ì‹œ ë¡œë“œ
+    //ÇöÀç ¾À ´Ù½Ã ·Îµå
     public void GameRestart()
     {
-        //ì‹œê°„ì„ 1ë°°ë¡œ ë˜ëŒë¦¼
+        //½Ã°£À» 1¹è·Î µÇµ¹¸²
         Time.timeScale = 1;
 
-        //í˜„ì¬ ì”¬ ë‹¤ì‹œ ë¡œë“œ
+        //ÇöÀç ¾À ´Ù½Ã ·Îµå
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    //ê²Œì„ ì¢…ë£Œ
+    //°ÔÀÓ Á¾·á
     public void GameQuit()
     {
-        //ì–´í”Œë¦¬ì¼€ì´ì…˜ ì¢…ë£Œ
+        //¾îÇÃ¸®ÄÉÀÌ¼Ç Á¾·á
         Application.Quit();
     }
 

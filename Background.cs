@@ -5,7 +5,7 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     [SerializeField] Transform[] m_background = null;
-    [SerializeField] float m_scrollSpeed = 0f;
+    static public float m_scrollSpeed = -1f;
 
     public float m_leftPosX = 0f;
     public float m_rightPosX = 0f;
