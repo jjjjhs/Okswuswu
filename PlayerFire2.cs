@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFire1 : MonoBehaviour
+public class PlayerFire2 : MonoBehaviour
 {
     // 좌클릭 할 때 옥수수알(총알) 발사
 
@@ -39,30 +39,27 @@ public class PlayerFire1 : MonoBehaviour
     public GameObject target;
 
     //bulletUI
-    private stage1pool sm;
+    stage2pool sm;
 
 
     void Update()
     {
-        if (Time.timeScale != 0)
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        Vector3 dir = new Vector3(0, 0, 0);
+        transform.position += dir * bulletSpeed * Time.deltaTime;
+
+        //마우스 좌클릭
+        if (Input.GetMouseButtonDown(0))
         {
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
+            //총알 생성
+            GameObject bullet = Instantiate(earFactory);
 
-            Vector3 dir = new Vector3(0, 0, 0);
-            transform.position += dir * bulletSpeed * Time.deltaTime;
+            bullet.transform.position = firePosition.transform.position;
 
-            //마우스 좌클릭
-            if (Input.GetMouseButtonDown(0))
-            {
-                //총알 생성
-                GameObject bullet = Instantiate(earFactory);
-
-                bullet.transform.position = firePosition.transform.position;
-
-                //개수 변경 적용
-                stage1pool.CurrentBullet--;
-            }
+            //개수 변경 적용
+            stage2pool.CurrentBullet--;
         }
     }
 }

@@ -1,37 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class butter : MonoBehaviour
 {
     //포션
     public GameObject[] potions = new GameObject[4];
-    Transform trans;
-    GameObject obj;
+    public GameObject potion;
 
-    static public float butterSpeed = 2;
+    public GameObject explosionFactory;
+    public static float butterSpeed = 2f;
     public int HpButt = 1;
 
     Vector3 dir;
 
     GameObject obstacle;
+    GameObject explosion;
+
+    Transform Player;
+    GameObject pot;
 
     void Start()
     {
-        trans = GetComponent<Transform>();
-        obj = GetComponent<GameObject>();
+        //->방향
+        dir = Vector3.left;
 
-            //->방향
-            dir = Vector3.left;
+        Player = GameObject.Find("Player").transform;
     }
 
     void Update()
     {
         if (HpButt == 0)
         {
-            Destroy(gameObject);
+            //적이 죽었을 때 포션 생성
+            int maxpotion = 1;
+            int rand = Random.Range(0, 4);
+            int randValue = Random.Range(0, 9);
+            if (randValue < 1)
+            {
+                for (int i = 0; i < maxpotion; i++)
+                {
+                    pot = Instantiate(potions[rand]); // 랜덤 생성
+                    break;
+                }
+            }
 
-            enemyFactory.CountDiedButt++;
+            explosion = Instantiate(explosionFactory);
+            explosion.transform.position = transform.position;
+            Destroy(gameObject);
+            butterFactory.CountDiedButt++;
         }
 
         transform.position += dir * butterSpeed * Time.deltaTime;
@@ -39,40 +57,15 @@ public class butter : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        print(HpButt);
-
         if (collision.gameObject.tag == "Bullet")
         {
             HpButt--;
             Destroy(collision.gameObject);
         }
 
-        if (collision.gameObject.name.Contains("obstacle"))
+        if (collision.gameObject.tag == ("obstacle"))
         {
             obstacle.SetActive(false);
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.name.Contains("bullet"))
-        {
-            Vector3 dir = new Vector3(0f, -1f, 1f); //위치!
-            transform.position = other.transform.position + dir;
-            StartCoroutine("dropPotion");
-        }
-    }
-    IEnumerator dropPotion()
-    {
-        int maxpotion = 10;
-        yield return new WaitForSeconds(0.2f);
-        for (int i = 0; i < maxpotion; i++)
-        {
-            int rand = Random.Range(0, 9);
-            yield return new WaitForSeconds(0.3f);
-            Instantiate(potions[rand]);
-        }
-        Destroy(this.gameObject);
-    }
-
 }

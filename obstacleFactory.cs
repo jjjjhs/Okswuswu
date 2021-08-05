@@ -6,14 +6,9 @@ public class obstacleFactory : MonoBehaviour
 {
 
     public GameObject obstacleSpawn;
-    public float createTime = 2;
+    public float createTime = 2.5f;
     public float currentTime;
 
-    void Start()
-    {
-
-
-    }
 
     void Update()
     {
@@ -22,7 +17,7 @@ public class obstacleFactory : MonoBehaviour
 
         if (currentTime > createTime)
         {
-            if(randValue < 3)
+            if (randValue < 2)
             {
                 GameObject obstacle = Instantiate(obstacleSpawn);
                 obstacle.transform.position = this.gameObject.transform.position;

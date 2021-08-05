@@ -8,10 +8,6 @@ using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-
-    GameObject butter;
-    //제자리에서 모습을 바꾸며(달리는 모양-이미지 교차 반복) 점프키를 누르면 점프하게 만들고싶다
-
     //캐릭터 컴포넌트 변수
     CharacterController cc;
 
@@ -43,7 +39,7 @@ public class PlayerMove : MonoBehaviour
     public GameObject hitEffect;
 
     //최대 체력
-    static public int maxHp = 100;
+    static public int maxHp = 10;
 
     //애니메이터 컴포넌트 변수
     Animator anim;
@@ -52,6 +48,19 @@ public class PlayerMove : MonoBehaviour
     static public int stage2clear = 30;
     static public int stage3clear = 50;
 
+    public GameObject SpeedPotion;
+    public GameObject StopPotion;
+    public GameObject HpPotion;
+    public GameObject DamagePotion;
+    AudioSource audio;
+    enum State
+    {
+        Idle,
+        bumpedPotion,
+        whilePotion,
+    };
+    State state = State.Idle;
+
     void Start()
     {
         //character component 불러오기
@@ -59,9 +68,11 @@ public class PlayerMove : MonoBehaviour
 
         //체력변수 초기화
         hp = maxHp;
+
+        AudioSource audio = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         //방향 고정
@@ -79,6 +90,8 @@ public class PlayerMove : MonoBehaviour
         {
             jumpCount++;
             yVelocity = jumpPower;
+            AudioSource jump = GetComponent<AudioSource>();
+            jump.Play();
         }
 
 
@@ -93,7 +106,7 @@ public class PlayerMove : MonoBehaviour
         //이동방향으로 플레이어 이동 및 충돌처리
         cc.Move(dir * moveSpeed * Time.deltaTime);
 
-        if (enemyFactory.CountDiedButt <= stage1clear)
+        if (butterFactory.CountDiedButt <= stage1clear)
         {
             int stage2hp = (maxHp - hp) * 70;
             if (stage2hp > maxHp)
@@ -101,19 +114,15 @@ public class PlayerMove : MonoBehaviour
                 stage2hp = maxHp;
             }
         }
-        else if (enemyFactory.CountDiedButt > stage1clear && enemyFactory.CountDiedMayo <= stage2clear)
+        else if (butterFactory.CountDiedButt > stage1clear && mayonnaiseFactory.CountDiedMayo <= stage2clear)
         {
             int stage3hp = maxHp - hp;
             {
                 stage3hp = maxHp;
             }
         }
-
     }
-
-
-
-    //플에이어 피격 함수
+    //플레이어 피격 함수
     public void onDamage(int value)
     {
         hp -= value;
@@ -143,19 +152,82 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.name == ("butter") || other.gameObject.name == ("mayonnasie") || other.gameObject.name == ("cheese"))
+        if (other.gameObject.tag == ("Enemy"))
         {
-            hp -= 5;
+            hp -= 2;
+            onDamage(1);
             Destroy(other.gameObject);
         }
 
-        if (other.gameObject.name.Contains("obstacle"))
+        if (other.gameObject.tag == ("Obstacle"))
         {
             SceneManager.LoadScene("Ending_bad_Popcorn");
         }
 
+        if (other.gameObject.tag == ("StopPotion"))
+        {
+            StartCoroutine("StPotion");
+            audio.Play();
+        }
+
+        if (other.gameObject.tag == ("SpeedPotion"))
+        {
+            StartCoroutine("SpPotion");
+            audio.Play();
+        }
+
+        if (other.gameObject.tag == ("HpPotion"))
+        {
+            StartCoroutine("HPotion");
+            audio.Play();
+        }
+
+        if (other.gameObject.tag == ("DamagePotion"))
+        {
+            StartCoroutine("DaPotion");
+            audio.Play();
+        }
 
     }
 
+    IEnumerator SpPotion()
+    {
+        PlayerMove.moveSpeed--;
+        Background.m_scrollSpeed += 0.1f;
+        yield return new WaitForSeconds(2.0f);
+        state = State.Idle;
+    }
+
+
+    IEnumerator StPotion()
+    {
+        cheese.cheeseSpeed = 0;
+        mayonnaise.mayoSpeed = 0;
+        butter.butterSpeed = 0;
+
+        yield return new WaitForSeconds(2.0f);
+
+        cheese.cheeseSpeed = 4f;
+        mayonnaise.mayoSpeed = 3f;
+        butter.butterSpeed = 2f;
+
+        state = State.Idle;
+    }
+
+
+    IEnumerator HPotion()
+    {
+        PlayerMove.hp += 2;
+        yield return new WaitForSeconds(2.0f);
+        state = State.Idle;
+    }
+
+
+    IEnumerator DaPotion()
+    {
+        PlayerFire1.attackPower++;
+        yield return new WaitForSeconds(2.0f);
+        state = State.Idle;
+    }
 
 }

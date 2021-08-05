@@ -22,43 +22,72 @@ public class bulletUI : MonoBehaviour
     public Text MaxBulletUI;
     [HideInInspector]
     public int MaxBullet;
+    enum StageChange
+    {
+        stage1,
+        stage2,
+        stage3
+    }
+
+    StageChange stagechange;
 
     void Start()
     {
-        poolSize = stage1PoolSize;
-        MaxBullet = poolSize;
-        CurrentBullet = MaxBullet;
+        stagechange = StageChange.stage1;
     }
 
     void Update()
     {
-        //현재 총알 UI
+        switch (stagechange)
+        {
+            case StageChange.stage1:
+                stage1();
+                break;
+            case StageChange.stage2:
+                stage2();
+                break;
+            case StageChange.stage3:
+                stage3();
+                break;
+        }
 
-        //ui 적용
+
         CurrentBulletUI.text = "현재 총알 : " + CurrentBullet;
-
-        //최대 총알 UI
-
-        //스테이지별 최대 총알 개수
-
-        if (enemyFactory.CountDiedButt > PlayerMove.stage1clear && enemyFactory.CountDiedMayo <= PlayerMove.stage2clear)
-        {
-            poolSize = stage2PoolSize;
-            MaxBullet = poolSize;
-            //시작 시 현재 총알 개수 = 최대 총알 개수
-            CurrentBullet = MaxBullet;
-        }
-        else if (enemyFactory.CountDiedButt > PlayerMove.stage1clear && enemyFactory.CountDiedMayo > PlayerMove.stage2clear)
-        {
-            poolSize = stage3PoolSize;
-            MaxBullet = poolSize;
-            //시작 시 현재 총알 개수 = 최대 총알 개수
-            CurrentBullet = MaxBullet;
-        }
-
 
         //최대 총알 개수를 표시한다 (증가할 필요 X) 
         MaxBulletUI.text = "최대 총알 : " + MaxBullet;
 
     }
+    void stage1()
+    {
+        poolSize = stage1PoolSize;
+        MaxBullet = poolSize;
+        CurrentBullet = MaxBullet;
+
+        if (butterFactory.CountDiedButt > PlayerMove.stage1clear && mayonnaiseFactory.CountDiedMayo <= PlayerMove.stage2clear)
+        {
+            stagechange = StageChange.stage2;
+        }
+
+    }
+
+    void stage2()
+    {
+        poolSize = stage2PoolSize;
+        MaxBullet = poolSize;
+        CurrentBullet = MaxBullet;
+
+        if (butterFactory.CountDiedButt > PlayerMove.stage1clear && mayonnaiseFactory.CountDiedMayo > PlayerMove.stage2clear)
+        {
+            stagechange = StageChange.stage3;
+        }
+    }
+
+    void stage3()
+    {
+        poolSize = stage3PoolSize;
+        MaxBullet = poolSize;
+        CurrentBullet = MaxBullet;
+    }
+
 }

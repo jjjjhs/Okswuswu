@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     //싱글턴-인스턴스를 하나만 생성하도록 함(버그 줄임)
     public static GameManager gm;
 
+    //스테이지 기준
+    public int stage1clear = 10;
+    public int stage2clear = 30;
+    public int stage3clear = 50;
 
     //게임 상태 상수
     public enum GameState
@@ -24,21 +28,8 @@ public class GameManager : MonoBehaviour
     //게임 상태 변수
     public GameState gState;
 
-    //배드엔딩 스프라이트 변수
-    public GameObject badending;
-    public GameObject happyending;
-    public GameObject normalending;
-
-
 
     //ui
-    //이미지 변수
-    public Image endingImage;
-
-
-    //text변수
-    public Text endingText;
-
     //옵션 메뉴 유아이 오브젝트
     public GameObject option;
 
@@ -57,77 +48,63 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
-
-    // Start is called before the first frame update
     void Start()
     {
         //초기 게임 상태
         //prologue 보여주며 게임 시작
 
         //플레이어 게임 오브젝트 검색
-        player = GameObject.Find("Capsule"); //'플레이어' 검색 -> Capsule을 게임의 플레이어(옥수수)로 변경하면 됨.
+        player = GameObject.Find("Player"); //'플레이어' 검색 -> Capsule을 게임의 플레이어(옥수수)로 변경하면 됨.
     }
 
-
-    // Update is called once per frame
     void Update()
     {
+        //스테이지 이동
+        if (mayonnaiseFactory.CountDiedMayo >= stage2clear)
+        {
+            //스테이지3으로 이동
+            SceneManager.LoadScene("Stage1 2");
+            mayonnaiseFactory.CountDiedMayo = 0;
+        }
+        else if (butterFactory.CountDiedButt >= 10)
+        {
+            //스테이지2 로 이동
+            SceneManager.LoadScene("Stage1 1");
+            butterFactory.CountDiedButt = 0;
+        }
+
         //badending
         //1. 만약 플레이어의 hp가 0이하라면 배드엔딩
         if (PlayerMove.hp <= 0)
         {
-            //게임오버 문구 출력
-            endingText.text = "Game Over..";
-            Badending();
+            //배드엔딩 연결 
+            SceneManager.LoadScene("Ending_bad_die");
         }
 
         //2. 만약 플레이어의 총알 개수가 다 떨어졌을 시 배드엔딩
-
-
-
+        if (stage1pool.CurrentBullet == 0 || stage2pool.CurrentBullet == 0 || stage3pool.CurrentBullet == 0)
+        {
+            //배드엔딩 연결
+            //게임시작하면 바로 출력
+            SceneManager.LoadScene("Ending_bad_born");
+        }
 
         //happyending
         //만약 플레이어가 할당량만큼 적을 처지 했을 시 해피엔딩
-
-
+        if (cheesefactory.CountDiedChee == stage3clear)
+        {
+            //해피엔딩 연결
+            SceneManager.LoadScene("Ending_happy");
+        }
 
         //normalending
         //체력이 일정량 이하인 체로 통과 시 노멀엔딩
-        if (PlayerMove.hp > 0 && PlayerMove.hp < 5) //5는 플에이어 체력의 일정 량.-->조절 가능
+        if (PlayerMove.hp > 0 && PlayerMove.hp < 5) //5는 플레이어 체력의 일정량.-->조절 가능
         {
-            //try again 문구 출력
-            endingText.text = "Try Again!";
-            Normalending();
+            //노멀엔딩 연결
+            SceneManager.LoadScene("Ending_normal");
         }
     }
-
-
-
-
-    IEnumerator Badending()
-    {
-        gState = GameState.GameOver;
-        badending.SetActive(true);
-        yield return new WaitForSeconds(2.0f);
-    }
-
-
-    IEnumerator Happyending()
-    {
-        gState = GameState.GameOver;
-        happyending.SetActive(true);
-        yield return new WaitForSeconds(2.0f);
-    }
-
-    IEnumerator Normalending()
-    {
-        gState = GameState.GameOver;
-        normalending.SetActive(true);
-        yield return new WaitForSeconds(2.0f);
-    }
-
 
     public void OpenOption()
     {
@@ -141,7 +118,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-
     //옵션 끄기
     public void CloseOption()
     {
@@ -152,9 +128,8 @@ public class GameManager : MonoBehaviour
         option.SetActive(false);
 
         gState = GameState.Run;
+        Time.timeScale = 1;
     }
-
-
 
     //현재 씬 다시 로드
     public void GameRestart()
@@ -170,11 +145,11 @@ public class GameManager : MonoBehaviour
     public void GameQuit()
     {
         //어플리케이션 종료
-        Application.Quit();
+        SceneManager.LoadScene("Main 0");
+
+        // 죽인 적의 수 초기화
+        butterFactory.CountDiedButt = 0;
+        mayonnaiseFactory.CountDiedMayo = 0;
+        cheesefactory.CountDiedChee = 0;
     }
-
-
-
-
-
 }

@@ -6,25 +6,30 @@ public class mayonnaise : MonoBehaviour
 {
     //포션 4개 = 오브젝트 배열 4개
     public GameObject[] potions = new GameObject[4];
-    Transform trans;
-    GameObject obj;
 
     //마요네즈 속도
-    static public float mayoSpeed = 3;
+    static public float mayoSpeed = 3f;
 
     //마요네즈 체력
     public int HpMayo = 2;
 
     Vector3 dir;
 
-    // 캐릭터 컨트롤러 변수
-    CharacterController cc;
+    //터지는 효과
+    GameObject explosion;
+    public GameObject explosionFactory;
+
+    //포션 생성
+    GameObject pot;
+    Transform Player;
 
 
     void Start()
     {
             //->방향을 아래로
             dir = Vector3.left;
+
+        Player = GameObject.Find("Player").transform;
     }
 
     void Update()
@@ -33,8 +38,26 @@ public class mayonnaise : MonoBehaviour
 
         if (HpMayo == 0)
         {
+            //적이 죽었을 때 포션 생성
+            int maxpotion = 1;
+            int rand = Random.Range(0, 4);
+            int randValue = Random.Range(0, 9);
+            if (randValue < 2)
+            {
+                for (int i = 0; i < maxpotion; i++)
+                {
+                    pot = Instantiate(potions[rand]); // 랜덤 생성
+                    if (pot.transform.position.x - Player.position.x > 1)
+                    {
+                        transform.Translate(new Vector2(-1, 0) * Time.deltaTime * 3);
+                    }
+                    break;
+                }
+            }
+            explosion = Instantiate(explosionFactory);
+            explosion.transform.position = transform.position;
             Destroy(gameObject);
-            enemyFactory.CountDiedMayo++;
+            mayonnaiseFactory.CountDiedMayo++;
         }
 
     }
@@ -49,26 +72,5 @@ public class mayonnaise : MonoBehaviour
 
     }
 
-        private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.name.Contains("Potion"))
-        {
-            Vector3 dir = new Vector3(0f, -1f, 1f); //위치!
-            transform.position = other.transform.position + dir;
-            StartCoroutine("dropPotion");
-        }
-    }
-    IEnumerator dropPotion()
-    {
-        int maxpotion = 10;
-        yield return new WaitForSeconds(0.2f);
-        for (int i = 0; i < maxpotion; i++)
-        {
-            int rand = Random.Range(0, 9);
-            yield return new WaitForSeconds(0.3f);
-            Instantiate(potions[rand]);
-        }
-        Destroy(this.gameObject);
-    }
 }
 

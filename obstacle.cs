@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class obstacle : MonoBehaviour
 {
@@ -22,13 +23,20 @@ public class obstacle : MonoBehaviour
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.name.Contains("bullet"))
+        if (other.gameObject.tag == "Bullet")
         {
             Obstacle.SetActive(false);
         }
-        else if (other.gameObject.name.Contains("butter") || other.gameObject.name.Contains("mayonnaise") || other.gameObject.name.Contains("cheese"))
+
+        if (other.gameObject.tag == "Enemy")
         {
             Obstacle.SetActive(false);
+        }
+
+        if (other.gameObject.tag == "Player")
+        {
+            Destroy(gameObject);
+            SceneManager.LoadScene("Ending_bad_Popcorn");
         }
     }
 }
